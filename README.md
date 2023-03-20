@@ -1,5 +1,9 @@
 # Automations
 Scripts that I create to automate tasks I come across when I would rather spend an hour coding than an 40 minutes doing it.
+## Tables of Contents
+1. [Description of `remove_md5_from_filename.py`](https://github.com/ally-petitt/Automations#description-of-remove_md5_from_filenamepy)
+2. [Description of `remove-old-files.sh`](https://github.com/ally-petitt/Automations#description-of-remove-old-filessh)
+
 
 ## Description of `remove_md5_from_filename.py`
 This Python script removes the MD5 hash added by Notion to each file when you go to export you notes. The typical file name format would be "[YOUR FOLDER/FILE] [MD5 HASH].[EXT]". An example of this is from my OSCP Notes repo when MSSQL.md had the name "MSSQL 3ccca60abe454be8bee82e97c920a60a.md" after being exported.
