@@ -24,3 +24,14 @@ This Bash script deletes files that haven't been accessed in a certain number of
 ```
 ### Example output
 ![Image of the output when the program is in use](./photos/clear-old-files.png)
+
+
+## Description of `install-security-updates.sh`
+This bash script will automatically install security updates on Debain-based operating systems through the apt package manager. As such, root or sudo privileges are required. It uses 3 methods of installing the security updates to ensure that minimal packages were missed by the end.
+
+```
+chmod +x install-security-updates.sh
+./install-security-updates.sh
+```
+
+
