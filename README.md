@@ -34,4 +34,23 @@ chmod +x install-security-updates.sh
 ./install-security-updates.sh
 ```
 
+## Description of `find_rip_offset.py`
+This python script was created to automate the process of finding the RIP offset when attempting to overflow a 64-bit buffer in a vulnerable binary. It utilizes pwntools to create a process running the executable and interacts with it using a de Bruijn sequence to calculate the offset.
+
+### Example Usage
+```
+$ python ./find_rip_offset.py -f ./binary_to_overflow -p 200
+[+] Starting local process './binary_to_overflow': pid 104267
+[*] Process './binary_to_overflow' stopped with exit code -11 (SIGSEGV) (pid 104267)
+[+] Parsing corefile...: Done
+[*] '/home/ally/my/path/core.104267'
+    Arch:      amd64-64-little
+    RIP:       0x400770
+    RSP:       0x7fff33c05f58
+    Exe:       '/home/ally/my/path/binary_to_overflow' (0x400000)
+    Fault:     0x6261616b6261616a
+[*] RIP offset is 136
+
+```
+
 
