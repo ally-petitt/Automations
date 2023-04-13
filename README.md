@@ -1,9 +1,32 @@
 # Automations
 Scripts that I create to automate tasks I come across when I would rather spend an hour coding than an 40 minutes doing it.
 ## Tables of Contents
-1. [Description of `remove_md5_from_filename.py`](https://github.com/ally-petitt/Automations#description-of-remove_md5_from_filenamepy)
-2. [Description of `remove-old-files.sh`](https://github.com/ally-petitt/Automations#description-of-remove-old-filessh)
+1. [Description of `exploit_libc.py`](https://github.com/ally-petitt/Automations#description-of-exploit_libcpy)
+2. [Description of `remove_md5_from_filename.py`](https://github.com/ally-petitt/Automations#description-of-remove_md5_from_filenamepy)
+3. [Description of `remove-old-files.sh`](https://github.com/ally-petitt/Automations#description-of-remove-old-filessh)
+4. [Description of `install-security-updates.sh`](https://github.com/ally-petitt/Automations#description-of-install-security-updatessh)
+5. [Description of `find_rip_offset.py`](https://github.com/ally-petitt/Automations#description-of-find_rip_offsetpy)
 
+## Description of `exploit_libc.py`
+Finds the RIP offset of an executable binary just like `find_rip_offset.py`, but continues to use that value in order to get a shell through the `system()` function in libc.so.6 with PIE, Canary and NX enabled. It does this by leaking the memory address of `scanf` when the `gets` function is called and using its offset in the `libc.so.6` file in order to calculate the base address of the `libc.so.6` file. Then, it uses the offset of the `system` function from the base address in order to call it with the parameter `/bin/sh`, which was located in memory and written to the RDI ([see x86 calling conventions](https://en.wikipedia.org/wiki/X86_calling_conventions) to understand why I overwrote the RDI to pass a parameter). The result is that the server hosting the vulnerable binary runs `system('/bin/sh')` that you use to get remote code execution through your interactive shell.
+
+### Help Menu
+```
+$ python3 ./exploit_libc.py --help                                                     2 ⨯
+usage: exploit_libc [-h] -f FILENAME -p PAYLOAD_SIZE
+
+options:
+  -h, --help            show this help message and exit
+  -f FILENAME, --filename FILENAME
+                        name of the executable file that you want to find the offset of
+  -p PAYLOAD_SIZE, --payload-size PAYLOAD_SIZE
+                        size of the payload to use to find the offset (must be enough to cause a segmentation fault
+                        in the program)
+
+         This program finds the address of libc.so.6 in the running binary
+         and uses it, along with a "pop RDI" instruction in order to get a shell.
+
+```
 
 ## Description of `remove_md5_from_filename.py`
 This Python script removes the MD5 hash added by Notion to each file when you go to export you notes. The typical file name format would be "[YOUR FOLDER/FILE] [MD5 HASH].[EXT]". An example of this is from my OSCP Notes repo when MSSQL.md had the name "MSSQL 3ccca60abe454be8bee82e97c920a60a.md" after being exported.
@@ -53,25 +76,5 @@ $ python ./find_rip_offset.py -f ./binary_to_overflow -p 200
 
 ```
 
-## Description of `exploit_libc.py`
-Finds the RIP offset of an executable binary just like `find_rip_offset.py`, but continues to use that value in order to get a shell through the `system()` function in libc.so.6 with PIE, Canary and NX enabled. It does this by leaking the memory address of `scanf` when the `gets` function is called and using its offset in the `libc.so.6` file in order to calculate the base address of the `libc.so.6` file. Then, it uses the offset of the `system` function from the base address in order to call it with the parameter `/bin/sh`, which was located in memory and written to the RDI ([see x86 calling conventions](https://en.wikipedia.org/wiki/X86_calling_conventions) to understand why I overwrote the RDI to pass a parameter). The result is that the server hosting the vulnerable binary runs `system('/bin/sh')` that you use to get remote code execution through your interactive shell.
-
-### Help Menu
-```
-$ python3 ./exploit_libc.py --help                                                     2 ⨯
-usage: exploit_libc [-h] -f FILENAME -p PAYLOAD_SIZE
-
-options:
-  -h, --help            show this help message and exit
-  -f FILENAME, --filename FILENAME
-                        name of the executable file that you want to find the offset of
-  -p PAYLOAD_SIZE, --payload-size PAYLOAD_SIZE
-                        size of the payload to use to find the offset (must be enough to cause a segmentation fault
-                        in the program)
-
-         This program finds the address of libc.so.6 in the running binary
-         and uses it, along with a "pop RDI" instruction in order to get a shell.
-
-```
 
 
